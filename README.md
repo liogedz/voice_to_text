@@ -13,11 +13,8 @@ This is a plain Java project demonstrating how to use the AssemblyAI API for aud
 ```txt
 ├── src/
 │   └── Main.java
-│
 ├── lib/
-│   ├── gson-2.10.1.jar
-│   └── java-dotenv-5.2.2.jar
-│
+│   └── gson-2.10.1.jar
 ├── .env.example
 ├── .gitignore
 └── README.md
@@ -25,12 +22,14 @@ This is a plain Java project demonstrating how to use the AssemblyAI API for aud
 
 ## 🔧 Requirements
 
-- Java 11 or newer
+- Java 21 or newer
 - Internet connection (to access AssemblyAI API)
 
 ## 🔑 Configuration
 
 - register, if not yet at
+- there is a free use limit
+- no credit card info, google login sufficient
   [link](https://www.assemblyai.com/)
 
 ```text
@@ -45,9 +44,13 @@ private static final String AUDIO = "https://www.your-audio.source";
 
 ## ▶️ Compile & Run
 
+- IDE will do compile work, add language level, maybe create `out` directory
+- Without IDE:
+
 ```bash
-javac -cp "lib/*" src/Main.java
-java  -cp "lib/*:src" Main
+mkdir out
+javac -cp "lib/*" -d out src/*.java
+java -cp "lib/*:out" Main
 ```
 
 ## 📦 Dependencies
