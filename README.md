@@ -6,6 +6,7 @@ This is a plain Java project demonstrating how to use the AssemblyAI API for aud
 - No Gradle
 - No frameworks
 - 🎯 Just Java (javac / java)
+
   All required dependencies are included so the project works immediately after cloning.
 
 ## 📁 Project Structure
@@ -22,7 +23,7 @@ This is a plain Java project demonstrating how to use the AssemblyAI API for aud
 
 ## 🔧 Requirements
 
-- Java 21 or newer
+- Java 25
 - Internet connection (to access AssemblyAI API)
 
 ## 🔑 Configuration
