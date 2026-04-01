@@ -14,25 +14,39 @@ private static final Gson GSON = new GsonBuilder()
         .create();
 
 void main() throws Exception {
-
     String url = BASE_URL + "/v2/transcript";
     TranscriptRequest request = new TranscriptRequest(AUDIO,
             MODELS);
     String jsonBody = GSON.toJson(request);
-
     HttpRequest postRequest = HttpRequest.newBuilder()
             .uri(URI.create(url))
             .header("Authorization",
                     API_KEY)
+            .header("Content-Type",
+                    "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
             .build();
-
     HttpClient client = HttpClient.newHttpClient();
     HttpResponse<String> postResponse = client.send(postRequest,
             HttpResponse.BodyHandlers.ofString());
 
+    if (postResponse.statusCode() != 200) {
+        TranscriptResponse errorResult = GSON.fromJson(postResponse.body(),
+                TranscriptResponse.class);
+        String errorMsg = errorResult != null && errorResult.error != null
+                ? errorResult.error
+                : postResponse.body();
+        throw new RuntimeException("Failed to submit transcript (HTTP "
+                + postResponse.statusCode() + "): " + errorMsg);
+    }
+
     TranscriptResponse postResult = GSON.fromJson(postResponse.body(),
             TranscriptResponse.class);
+
+    if (postResult == null || postResult.id == null) {
+        throw new RuntimeException("No transcript ID in response: "
+                + postResponse.body());
+    }
 
     String transcriptId = postResult.id;
     HttpRequest getRequest = HttpRequest.newBuilder()
@@ -43,19 +57,28 @@ void main() throws Exception {
 
     ScheduledExecutorService scheduler =
             Executors.newSingleThreadScheduledExecutor();
-
     scheduler.scheduleAtFixedRate(() -> {
                 try {
-                    HttpResponse<String> response =
-                            client.send(getRequest,
-                                    HttpResponse.BodyHandlers.ofString());
+                    HttpResponse<String> response = client.send(getRequest,
+                            HttpResponse.BodyHandlers.ofString());
 
-                    TranscriptResponse tr =
-                            GSON.fromJson(response.body(),
-                                    TranscriptResponse.class);
+                    if (response.statusCode() != 200) {
+                        System.err.println("Polling error (HTTP "
+                                + response.statusCode() + "): " + response.body());
+                        scheduler.shutdown();
+                        return;
+                    }
+
+                    TranscriptResponse tr = GSON.fromJson(response.body(),
+                            TranscriptResponse.class);
+
+                    if (tr == null) {
+                        System.err.println("Empty polling response");
+                        scheduler.shutdown();
+                        return;
+                    }
 
                     IO.println("Status: " + tr.status);
-
                     if ("completed".equals(tr.status)) {
                         IO.println("Text:\n" + tr.text);
                         scheduler.shutdown();
