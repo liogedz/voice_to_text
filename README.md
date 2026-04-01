@@ -14,9 +14,10 @@ This is a plain Java project demonstrating how to use the AssemblyAI API for aud
 ```txt
 ├── src/
 │   └── Main.java
+│   └── TranscriptRequest.java
+│   └── TranscriptResponse.java
 ├── lib/
 │   └── gson-2.10.1.jar
-├── .env.example
 ├── .gitignore
 └── README.md
 ```
@@ -28,10 +29,9 @@ This is a plain Java project demonstrating how to use the AssemblyAI API for aud
 
 ## 🔑 Configuration
 
-- register, if not yet at
+- register, if not yet at [link](https://www.assemblyai.com/)
 - there is a free use limit
 - no credit card info, google login sufficient
-  [link](https://www.assemblyai.com/)
 
 ```text
 Replace `YOUR_ASSEMBLYAI_API_KEY` in `Main.java` with your own API key.
