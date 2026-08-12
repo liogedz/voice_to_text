@@ -8,7 +8,7 @@ import java.net.http.HttpResponse;
 private static final String BASE_URL = "https://api.eu.assemblyai.com";
 private static final String API_KEY = "YOUR_ASSEMBLYAI_API_KEY";
 private static final String AUDIO = "https://github.com/liogedz/JavaAPI/blob/main/Jim_Carrey_Speech.mp3?raw=true";
-private static final String[] MODELS = {"universal-3-pro", "universal-2"};
+private static final String[] MODELS = {"universal-3-5-pro"};
 private static final Gson GSON = new GsonBuilder()
         .serializeNulls()
         .create();
